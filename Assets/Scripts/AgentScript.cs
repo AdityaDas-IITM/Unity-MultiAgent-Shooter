@@ -33,33 +33,38 @@ public class AgentScript : Agent
         if(vectorAction[0] == 1f)
         {
             shooter.shoot();
-            Debug.Log("Shots Fired");
         }
 
         if(vectorAction[1] == 1f)
         {
             movement = 1f;
+            if (MaxStep > 0) AddReward(-1f / MaxStep);
         }
 
         else if(vectorAction[1] == 2f)
         {
             movement = -1f;
+            if (MaxStep > 0) AddReward(-1f / MaxStep);
         }
 
         if(vectorAction[2] == 1f)
         {
             rotation = -1f;
+            if (MaxStep > 0) AddReward(-1f / MaxStep);
         }
 
-        else if(vectorAction[2] == 2f)
+        if(vectorAction[2] == 2f)
         {
             rotation = 1f;
+            if (MaxStep > 0) AddReward(-1f / MaxStep);
         }
 
         rb.MovePosition(transform.position + transform.forward * speed * movement * Time.fixedDeltaTime);
-        transform.Rotate(transform.up * angularvelocity * rotation * Time.fixedDeltaTime);
+        //transform.position += transform.forward * speed * movement * Time.fixedDeltaTime;
+        transform.Rotate(transform.up *angularvelocity * rotation * Time.fixedDeltaTime);
+        
 
-        if(MaxStep>0) AddReward(-1f / MaxStep);
+       
     }
 
     public override void Heuristic(float[] a)
@@ -99,7 +104,18 @@ public class AgentScript : Agent
 
     public override void CollectObservations(VectorSensor sensor)
     {
+        //sensor.AddObservation(transform.localPosition);
         sensor.AddObservation(transform.forward);
+
+        //for shooter_dept
+        if(Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, 40f))
+        {
+            sensor.AddObservation(hit.distance);
+        }
+        else
+        {
+            sensor.AddObservation(40f);
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -112,6 +128,7 @@ public class AgentScript : Agent
     }
 
     
+
 
 
 

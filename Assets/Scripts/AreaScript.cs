@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Unity.MLAgents;
+using UnityEditorInternal;
 using UnityEngine;
 
 public class AreaScript : MonoBehaviour
@@ -39,6 +40,7 @@ public class AreaScript : MonoBehaviour
 
         if(enemylist.Count == 0)
         {
+            //agentScript.AddReward(5f);
             agentScript.EndEpisode();
         }
     }
@@ -82,7 +84,17 @@ public class AreaScript : MonoBehaviour
 
     void ResetAgent()
     {
+        
+        //redo:
+        //float x = UnityEngine.Random.Range(xmin, xmax);
+        //float z = UnityEngine.Random.Range(zmin, zmax);
+
         Vector3 position = new Vector3(-17.93306f, 49.55006f, -41.75505f);
+        //Vector3 position = new Vector3(x, 49.55006f, z);
+
+        //check = canSpawn(position);
+        //if (!check) goto redo;
+
 
         Quaternion rotation = Quaternion.Euler(0f, UnityEngine.Random.Range(0f, 360f), 0f);
 
@@ -90,6 +102,8 @@ public class AreaScript : MonoBehaviour
 
         agent.transform.localPosition = position;
         agent.transform.rotation = rotation;
+        agent.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        agent.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
     
     }
 
